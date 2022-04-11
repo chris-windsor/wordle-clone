@@ -1,25 +1,26 @@
-import logo from './logo.svg';
 import './App.css';
+import {useEffect, useState} from "react";
+import Game from "./Game";
+
+const wordFile = require("./words.txt");
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  // Constant states
+  const [possibleWords, setPossibleWords] = useState([]);
+  const [correctWord, setCorrectWord] = useState([]);
+
+  // Load all those wordssss...
+  useEffect(() => {
+    fetch(wordFile).then(res => res.text()).then(res => {
+      const words = res.split("\n");
+      const randomIndex = Math.floor(Math.random() * (words.length + 1));
+
+      setPossibleWords(words);
+      setCorrectWord(words[randomIndex].split(""));
+    });
+  }, [])
+
+  return <Game wordList={possibleWords} correctWord={correctWord}/>
 }
 
 export default App;
